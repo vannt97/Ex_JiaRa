@@ -1,24 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
-
+import {
+  BrowserRouter,
+  Route,
+  Router,
+  Switch,
+  useHistory,
+} from "react-router-dom";
+import Login from "./Pages/Login/Login";
+import UserLoginTemplate from "./Templates/userLoginTemplate/UserLoginTemplate";
+import "antd/dist/antd.css"; // or 'antd/dist/antd.less'
+import Loading from "./Components/GlobalSetting/LoadingComponent/Loading";
+import Home from "./Pages/Home/Home";
+import { Fragment, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { ADD_HISTORY } from "./Redux/Constants/HistoryConstant";
+import JiraTemPlate from "./Templates/JiraTemplate/JiraTemPlate";
 function App() {
+  let history = useHistory();
+  let dispatch = useDispatch();
+  useEffect(() => {
+    dispatch({ type: ADD_HISTORY, history });
+  }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Fragment>
+      <Loading />
+      <Switch>
+        <UserLoginTemplate exact path="/login" Component={Login} />
+        <JiraTemPlate exact path="/jira" />
+        <Route exact path="/" component={Home} />
+        <Route exact path="/home" component={Home} />
+      </Switch>
+    </Fragment>
   );
 }
 
