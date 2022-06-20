@@ -1,9 +1,8 @@
 import React from "react";
 import { Route } from "react-router-dom";
-import ContentMain from "../../Components/Jira/MainContentJira/ContentMain";
-import HeaderMain from "../../Components/Jira/MainContentJira/HeaderMain";
-import InfoMain from "../../Components/Jira/MainContentJira/InfoMain";
+
 import MenuJiraTemplate from "../../Components/Jira/MenuJiraTemplate";
+import ModalInfoJira from "../../Components/Jira/ModalJira/ModalInfoJira";
 import SideBarJiraTemplate from "../../Components/Jira/SideBarJiraTemplate";
 import "./JiraTemPlate.css";
 export default function JiraTemPlate(props) {
@@ -16,12 +15,8 @@ export default function JiraTemPlate(props) {
           <div className="jira">
             <SideBarJiraTemplate />
             <MenuJiraTemplate />
-            <div className="main">
-              <HeaderMain />
-              <h3>Example Board</h3>
-              <InfoMain />
-              <ContentMain />
-            </div>
+            <ModalInfoJira />
+            <Component {...propsRoute} />
           </div>
         );
       }}

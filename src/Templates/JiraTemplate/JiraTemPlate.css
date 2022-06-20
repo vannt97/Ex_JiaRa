@@ -20,8 +20,7 @@
   width: 200px;
   box-shadow: rgb(0 0 0 / 60%) 0px 0px 50px 0px;
 }
-.sideBar:hover .sideBar-icon {
-}
+
 .sideBar:hover .sideBar-icon a span {
   font-size: 12px;
   margin-left: 20px;
@@ -111,7 +110,7 @@
 /* Menu */
 .menu {
   height: 100vh;
-  width: 230px;
+  min-width: 230px;
   margin-left: 64px;
   background-color: #f4f5f7;
   border-right: 1px solid rgb(223, 225, 230);
@@ -155,30 +154,32 @@
   text-align: left;
 }
 
-.menu .control div {
+.menu .control .control_link {
   padding: 10px;
   cursor: pointer;
+  display: block;
+  color: black;
 }
-.menu .control div:hover {
+.menu .control .control_link:hover {
   background-color: rgba(0, 0, 0, 0.1);
   color: rgb(0, 82, 204);
 }
-.menu .control div span {
+.menu .control .control_link span {
   margin-left: 15px;
 }
 .menu .control .active {
   background-color: rgba(0, 0, 0, 0.1);
   color: rgb(0, 82, 204);
 }
-.menu .control div span:first-child {
+.menu .control .control_link span:first-child {
   margin-right: 10px;
 }
 
-.menu .control div span:first-child:focus {
+.menu .control .control_link span:first-child:focus {
   background-color: #ebecf0;
 }
 
-.menu .control div:focus {
+.menu .control .control_link:focus {
   color: royalblue;
 }
 

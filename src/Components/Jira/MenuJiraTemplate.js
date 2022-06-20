@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 export default function MenuJiraTemplate() {
   return (
@@ -13,14 +14,19 @@ export default function MenuJiraTemplate() {
         </div>
       </div>
       <div className="control">
-        <div className="active">
+        <NavLink className="control_link " to="/jira">
           <i className="fa fa-credit-card" />
           <span>Dash Board</span>
-        </div>
-        <div>
+        </NavLink>
+
+        <NavLink className="control_link" to="/createproject">
           <i className="fa fa-cog" />
-          <span>Project Settings</span>
-        </div>
+          <span>Create Project </span>
+        </NavLink>
+        <NavLink className="control_link" to="/projectmanagement">
+          <i className="fa fa-archive" aria-hidden="true"></i>
+          <span>Project Management </span>
+        </NavLink>
       </div>
       <hr className="dash_Menu" />
       <div className="feature">

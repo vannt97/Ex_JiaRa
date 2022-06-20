@@ -10,12 +10,12 @@ import { DISPLAY_LOADING, HIDE_LOADING } from "../Constants/LoadingConstant";
 // import { push } from "react-router-redux";
 function* singinSaga(action) {
   yield put({ type: DISPLAY_LOADING });
+  yield delay(1000);
 
   try {
     // let res = yield call(() => {
     //   exJiraService.siginJira(action.userLogin);
     // });
-    yield delay(1000);
 
     let { data, status } = yield exJiraService.siginJira(action.userLogin);
     localStorage.setItem(TOKEN, data.content.accessToken);

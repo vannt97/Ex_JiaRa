@@ -1,6 +1,9 @@
 import React from "react";
-
+import { useDispatch } from "react-redux";
+import { SHOW_MODAL_FORM_CREATE_TASK } from "../../Redux/Constants/ModalFormConstant";
+import FromCreateTask from "../Form/FormCreateTask/FromCreateTask";
 export default function SideBarJiraTemplate() {
+  let dispatch = useDispatch();
   return (
     <div className="sideBar">
       <div className="sideBar-top">
@@ -20,10 +23,19 @@ export default function SideBarJiraTemplate() {
             <span className="title">SEARCH ISSUES</span>
           </a>
         </div>
-        <div className="sideBar-icon">
+        <div
+          className="sideBar-icon"
+          onClick={() => {
+            dispatch({
+              type: SHOW_MODAL_FORM_CREATE_TASK,
+              ComponentContent: <FromCreateTask />,
+              title: "Create Task",
+            });
+          }}
+        >
           <a href="#">
             <i className="fa fa-plus" />
-            <span className="title">CREATE ISSUES</span>
+            <span className="title">CREATE TASK</span>
           </a>
         </div>
       </div>
