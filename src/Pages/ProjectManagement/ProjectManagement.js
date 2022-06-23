@@ -346,7 +346,12 @@ const ProjectManagement = () => {
   return (
     <div className="container-fluid">
       <h1 style={{ margin: "20px" }}>Project Management</h1>
-      <Table columns={columns} rowKey={"id"} dataSource={projectList} />
+      <Table
+        columns={columns}
+        rowKey={"id"}
+        dataSource={projectList}
+        bordered="true"
+      />
     </div>
   );
 };

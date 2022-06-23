@@ -14,7 +14,11 @@ export default function MenuJiraTemplate() {
         </div>
       </div>
       <div className="control">
-        <NavLink className="control_link " to="/jira">
+        <NavLink
+          className="control_link "
+          to="/jira"
+          style={{ cursor: "no-drop", pointerEvents: "none" }}
+        >
           <i className="fa fa-credit-card" />
           <span>Dash Board</span>
         </NavLink>
@@ -26,6 +30,10 @@ export default function MenuJiraTemplate() {
         <NavLink className="control_link" to="/projectmanagement">
           <i className="fa fa-archive" aria-hidden="true"></i>
           <span>Project Management </span>
+        </NavLink>
+        <NavLink className="control_link" to="/usermanagement">
+          <i className="fa fa-users"></i>
+          <span>User Management </span>
         </NavLink>
       </div>
       <hr className="dash_Menu" />

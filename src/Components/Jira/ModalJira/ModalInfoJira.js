@@ -11,19 +11,30 @@ import {
   UPDATA_STATUS_TASK_API,
   UPDATE_TASK_API,
 } from "../../../Redux/Constants/TaskConstant";
-import { Input, Select } from "antd";
+import { Input, Popconfirm, Select } from "antd";
 import { GET_TASK_TYPE_API } from "../../../Redux/Constants/TaskTypeConstant";
 import { withFormik } from "formik";
 import { Editor } from "@tinymce/tinymce-react";
+import {
+  DELETE_COMMENT_API,
+  INSERT_COMMENT_API,
+  UPDATE_COMMENT_API,
+} from "../../../Redux/Constants/CommentConstant";
+import "./ModalInfoJira.css";
+import { useRef } from "react";
 const { Option } = Select;
 
 function ModalInfoJira(props) {
-  let { listStatus, listTaskType } = useSelector((state) => state.TaskReducer);
+  let { taskDetailModal, listStatus, listTaskType } = useSelector(
+    (state) => state.TaskReducer
+  );
   let { projectDetail } = useSelector((state) => state.ProjectDetailReducer);
 
   const { listPriority } = useSelector((state) => state.PriorityReducer);
   let dispatch = useDispatch();
   let [visibleDescription, setVisibleDescription] = useState(false);
+  let [visibleComment, setVisibleComment] = useState(false);
+  let [visibleEditComment, setVisibleEditComment] = useState(false);
   useEffect(() => {
     dispatch({ type: GET_ALL_STATUS_API });
     dispatch({ type: GET_LIST_PRIORITY_API });
@@ -31,8 +42,7 @@ function ModalInfoJira(props) {
   }, []);
   const {
     values,
-    touched,
-    errors,
+
     handleChange,
     handleBlur,
     handleSubmit,
@@ -54,9 +64,25 @@ function ModalInfoJira(props) {
   } = values;
   let [historyDes, setHistoryDes] = useState(description);
   let [contentDes, setContenDes] = useState(description);
+  let [contentComment, setContentComment] = useState("");
+  let [contentEditComment, setContentEditComment] = useState("");
+
+  let [idComment, setIdComment] = useState("");
+
   const handleEditorChange = (content, value) => {
     // setFieldValue("description", content);
     setContenDes(content);
+  };
+  const handleEditorChangeComment = (content, value) => {
+    // setFieldValue("description", content);
+    setContentComment(content);
+  };
+  const handleEditorChangeEditComent = (content, value) => {
+    setContentEditComment(content);
+  };
+  const parserComment = (content, classActive) => {
+    let jsxContent = ReactHtmlParser(content);
+    return <div className={`parserComment ${classActive}`}>{jsxContent}</div>;
   };
   const renderDescription = () => {
     return (
@@ -244,38 +270,9 @@ function ModalInfoJira(props) {
                   <div className="description" style={{ marginBottom: "50px" }}>
                     {renderDescription()}
                   </div>
-                  {/* // */}
-                  {/* <div style={{ fontWeight: 500, marginBottom: 10 }}>
-                    Jira Software (software projects) issue types:
-                  </div> */}
-                  {/* <div className="title">
-                    <div className="title-item">
-                      <h3>
-                        BUG <i className="fa fa-bug" />
-                      </h3>
-                      <p>
-                        A bug is a problem which impairs or prevents the
-                        function of a product.
-                      </p>
-                    </div>
-                    <div className="title-item">
-                      <h3>
-                        STORY <i className="fa fa-book-reader" />
-                      </h3>
-                      <p>
-                        A user story is the smallest unit of work that needs to
-                        be done.
-                      </p>
-                    </div>
-                    <div className="title-item">
-                      <h3>
-                        TASK <i className="fa fa-tasks" />
-                      </h3>
-                      <p>A task represents work that needs to be done</p>
-                    </div>
-                  </div> */}
+
                   <div className="comment">
-                    <h6>Comment</h6>
+                    <h6 className="mb-4">Comment</h6>
                     <div className="block-comment" style={{ display: "flex" }}>
                       <div className="avatar">
                         <img
@@ -284,7 +281,61 @@ function ModalInfoJira(props) {
                         />
                       </div>
                       <div className="input-comment">
-                        <input type="text" placeholder="Add a comment ..." />
+                        {visibleComment ? (
+                          <div>
+                            <Editor
+                              name="inputCommet"
+                              init={{
+                                height: 100,
+                                menubar: false,
+                                hidden_input: false,
+                                plugins: [
+                                  "advlist autolink lists link image charmap print preview anchor",
+                                  "searchreplace visualblocks code fullscreen",
+                                  "insertdatetime media table paste code help wordcount",
+                                ],
+                                toolbar:
+                                  "undo redo | formatselect | bold italic backcolor | \
+                                alignleft aligncenter alignright alignjustify | \
+                                bullist numlist outdent indent | removeformat | help",
+                              }}
+                              onEditorChange={handleEditorChangeComment}
+                            />
+                            <div className="mt-2">
+                              <button
+                                className="btn btn-primary mr-2"
+                                onClick={() => {
+                                  dispatch({
+                                    type: INSERT_COMMENT_API,
+                                    taskId,
+                                    contentComment,
+                                  });
+                                  setVisibleComment(false);
+                                }}
+                              >
+                                Save
+                              </button>
+                              <button
+                                className="btn btn-secondary"
+                                onClick={() => {
+                                  // setFieldValue("description", historyDes);
+                                  setVisibleComment(false);
+                                }}
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <input
+                            type="text"
+                            placeholder="Add a comment ..."
+                            style={{ cursor: "pointer" }}
+                            onClick={() => {
+                              setVisibleComment(true);
+                            }}
+                          />
+                        )}
                         <p>
                           <span style={{ fontWeight: 500, color: "gray" }}>
                             Protip:
@@ -296,6 +347,7 @@ function ModalInfoJira(props) {
                                 fontWeight: "bold",
                                 background: "#ecedf0",
                                 color: "#b4bac6",
+                                margin: "0px 5px",
                               }}
                             >
                               M
@@ -307,32 +359,119 @@ function ModalInfoJira(props) {
                     </div>
                     <div className="lastest-comment">
                       <div className="comment-item">
-                        <div
-                          className="display-comment"
-                          style={{ display: "flex" }}
-                        >
-                          <div className="avatar">
-                            <img
-                              src={require("../../../assets/img/anh1.jfif")}
-                              alt="anh"
-                            />
-                          </div>
-                          <div>
-                            <p style={{ marginBottom: 5 }}>
-                              Lord Gaben <span>a month ago</span>
-                            </p>
-                            <p style={{ marginBottom: 5 }}>
-                              Lorem ipsum dolor sit amet, consectetur
-                              adipisicing elit. Repellendus tempora ex
-                              voluptatum saepe ab officiis alias totam ad
-                              accusamus molestiae?
-                            </p>
-                            <div>
-                              <span style={{ color: "#929398" }}>Edit</span>•
-                              <span style={{ color: "#929398" }}>Delete</span>
+                        {taskDetailModal.lstComment?.map((comment, index) => {
+                          let classActive =
+                            idComment == comment.id ? "active" : "hide";
+                          let classActiveComment =
+                            idComment == comment.id ? "hide" : "active";
+                          let classActiveUser =
+                            comment.name === projectDetail.creator.name
+                              ? "active"
+                              : "hide";
+                          return (
+                            <div
+                              className="display-comment"
+                              style={{ display: "flex" }}
+                              key={index}
+                            >
+                              <div className="avatar">
+                                <img src={comment.avatar} alt="anh" />
+                              </div>
+                              <div>
+                                <p style={{ marginBottom: 5 }}>
+                                  {comment.name} <span> - a month ago</span>
+                                </p>
+                                {parserComment(
+                                  comment.commentContent,
+                                  classActiveComment
+                                )}
+                                <div className={classActive}>
+                                  <Editor
+                                    name={comment.id}
+                                    value={contentEditComment}
+                                    init={{
+                                      height: 100,
+                                      menubar: false,
+                                      plugins: [
+                                        "advlist autolink lists link image charmap print preview anchor",
+                                        "searchreplace visualblocks code fullscreen",
+                                        "insertdatetime media table paste code help wordcount",
+                                      ],
+                                      toolbar:
+                                        "undo redo | formatselect | bold italic backcolor | \
+                                alignleft aligncenter alignright alignjustify | \
+                                bullist numlist outdent indent | removeformat | help",
+                                    }}
+                                    onEditorChange={
+                                      handleEditorChangeEditComent
+                                    }
+                                  />
+                                  <div className="mt-2">
+                                    <button
+                                      className="btn btn-primary mr-2"
+                                      onClick={() => {
+                                        dispatch({
+                                          type: UPDATE_COMMENT_API,
+                                          updateComment: {
+                                            id: comment.id,
+                                            contentComment: contentEditComment,
+                                          },
+                                          taskId,
+                                        });
+                                        setIdComment("");
+                                      }}
+                                    >
+                                      Save
+                                    </button>
+
+                                    <button
+                                      className="btn btn-primary"
+                                      onClick={() => {
+                                        setIdComment("");
+                                      }}
+                                    >
+                                      Close
+                                    </button>
+                                  </div>
+                                </div>
+                                <div className={classActiveUser}>
+                                  <span
+                                    className="comment_function"
+                                    style={{ color: "#929398" }}
+                                    onClick={() => {
+                                      setContentEditComment(
+                                        comment.commentContent
+                                      );
+                                      setIdComment(comment.id);
+                                    }}
+                                  >
+                                    Edit
+                                  </span>
+                                  <span style={{ margin: "0 10px" }}>•</span>
+                                  <Popconfirm
+                                    title="Are you sure to delete this comment?"
+                                    onConfirm={() => {
+                                      dispatch({
+                                        type: DELETE_COMMENT_API,
+                                        idComment: comment.id,
+                                        taskId,
+                                      });
+                                    }}
+                                    okText="Yes"
+                                    cancelText="No"
+                                  >
+                                    <span
+                                      className="comment_function"
+                                      style={{ color: "#929398" }}
+                                    >
+                                      Delete
+                                    </span>
+                                  </Popconfirm>
+                                </div>
+                              </div>
                             </div>
-                          </div>
-                        </div>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
@@ -345,14 +484,7 @@ function ModalInfoJira(props) {
                       defaultValue={statusId}
                       onChange={(e) => {
                         let { value } = e.target;
-                        // dispatch({
-                        //   type: UPDATA_STATUS_TASK_API,
-                        //   updateStatus: {
-                        //     taskId: taskId,
-                        //     statusId: value,
-                        //   },
-                        //   projectId: projectId,
-                        // });
+
                         dispatch({
                           type: UPDATE_TASK_API,
                           actionType: CHANGE_PROPERTY_IN_TASK,
@@ -400,10 +532,6 @@ function ModalInfoJira(props) {
                                 cursor: "pointer",
                               }}
                               onClick={() => {
-                                // dispatch({
-                                //   type: REMOVE_USER_ASSIGNESS,
-                                //   userId: user.id,
-                                // });
                                 dispatch({
                                   type: UPDATE_TASK_API,
                                   actionType: REMOVE_USER_ASSIGNESS,

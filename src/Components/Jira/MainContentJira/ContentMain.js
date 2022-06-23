@@ -10,7 +10,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 export default function ContentMain(props) {
   let { lstTask } = props.projectDetail;
-  console.log(props.projectDetail);
+
   let dispatch = useDispatch();
   let renderPriority = (priorityTask) => {
     let { priorityId, priority } = priorityTask;
@@ -35,7 +35,6 @@ export default function ContentMain(props) {
     }
   };
   const handlerDragEnd = (result) => {
-    console.log(result);
     let { destination, source, draggableId } = result;
     if (
       destination === null ||

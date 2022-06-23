@@ -19,6 +19,8 @@ import CreateProject from "./Pages/CreateProject/CreateProject";
 import ProjectManagement from "./Pages/ProjectManagement/ProjectManagement";
 import ModalEditJira from "./HOC/ModalEditJira";
 import DragAndDrop from "./Pages/Home/DragAndDrop";
+import SignUp from "./Pages/SignUp/SignUp";
+import UserManagement from "./Pages/UserManagement/UserManagement";
 function App() {
   let history = useHistory();
   let dispatch = useDispatch();
@@ -30,10 +32,13 @@ function App() {
       <Loading />
       <ModalEditJira />
       <Switch>
+        <UserLoginTemplate exact path="/" Component={Login} />
         <UserLoginTemplate exact path="/login" Component={Login} />
+        <UserLoginTemplate exact path="/signup" Component={SignUp} />
+        <JiraTemPlate exact path="/usermanagement" Component={UserManagement} />
+
         <JiraTemPlate exact path="/jira" Component={Jira} />
         <JiraTemPlate exact path="/projectdetail/:projectId" Component={Jira} />
-        <JiraTemPlate exact path="/" Component={CreateProject} />
         <JiraTemPlate exact path="/createproject" Component={CreateProject} />
         <JiraTemPlate
           exact

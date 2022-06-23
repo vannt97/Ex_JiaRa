@@ -22,6 +22,17 @@ class TaskService extends baseServices {
   updateTask = (taskUpdate) => {
     return this.post(`Project/updateTask`, taskUpdate);
   };
+  insertCommentService = (comment) => {
+    return this.post(`Comment/insertComment`, comment);
+  };
+  updateCommentService = (updateComment) => {
+    return this.putOnLinkUrl(
+      `Comment/updateComment?id=${updateComment.id}&contentComment=${updateComment.contentComment}`
+    );
+  };
+  deleteCommentService = (idComment) => {
+    return this.delete(`Comment/deleteComment?idComment=${idComment}`);
+  };
 }
 
 let taskService = new TaskService();

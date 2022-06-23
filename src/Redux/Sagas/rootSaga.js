@@ -27,5 +27,11 @@ export function* rootSaga() {
     Task.followActionGetTaskDetail(),
     Task.followActionUpdateStatusTask(),
     Task.followActionUpdateTask(),
+    Task.followActionInsertComment(),
+    Task.followActionUpdateComment(),
+    Task.followActionDeleteComment(),
+    User.followActionSignUp(),
+    User.followActionDeleteUser(),
+    User.followActionUpdateUser(),
   ]);
 }

@@ -34,7 +34,7 @@ export default function UserLoginTemplate(props) {
             ></Sider>
 
             <Content>
-              <Component />
+              <Component {...propsRoute} />
             </Content>
           </Layout>
         );

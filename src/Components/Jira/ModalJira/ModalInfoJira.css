@@ -1,0 +1,15 @@
+.comment_function:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.parserComment p {
+  margin: 0;
+}
+
+.active {
+  display: block;
+}
+
+.hide {
+  display: none;
+}

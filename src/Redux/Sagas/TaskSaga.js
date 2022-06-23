@@ -2,9 +2,13 @@ import { call, delay, put, select, takeLatest } from "redux-saga/effects";
 import taskService from "../../Services/ExJiraServices/TaskService";
 import openNotificationWithIcon from "../../Util/Notification/notification";
 import { STATUS_CODE } from "../../Util/SystemSetting/SystemSetting";
+import {
+  DELETE_COMMENT_API,
+  INSERT_COMMENT_API,
+  UPDATE_COMMENT_API,
+} from "../Constants/CommentConstant";
 import { DISPLAY_LOADING, HIDE_LOADING } from "../Constants/LoadingConstant";
 import {
-  GET_ALL_PROPJECT_API,
   GET_PROJECT_DETAIL_API,
   HIDE_MODAL_EDIT,
 } from "../Constants/ProjectConstant";
@@ -15,7 +19,6 @@ import {
 import {
   CHANGE_ASSIGNESS,
   CHANGE_PROPERTY_IN_TASK,
-  CHANGE_UPDATE_STATUS,
   CREATE_TASK_API,
   GET_TASK_DETAIL,
   GET_TASK_DETAIL_API,
@@ -130,4 +133,56 @@ function* updateTaskSaga(action) {
 
 export function* followActionUpdateTask() {
   yield takeLatest(UPDATE_TASK_API, updateTaskSaga);
+}
+
+function* insertComment(action) {
+  let { contentComment, taskId } = action;
+  try {
+    let { status } = yield call(() => {
+      return taskService.insertCommentService({ taskId, contentComment });
+    });
+    if (status === STATUS_CODE.SUCCESS) {
+      yield put({ type: GET_TASK_DETAIL_API, taskId: taskId });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export function* followActionInsertComment() {
+  yield takeLatest(INSERT_COMMENT_API, insertComment);
+}
+
+function* updateComment(action) {
+  try {
+    let { status } = yield call(() => {
+      return taskService.updateCommentService(action.updateComment);
+    });
+    if (status === STATUS_CODE.SUCCESS) {
+      yield put({ type: GET_TASK_DETAIL_API, taskId: action.taskId });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export function* followActionUpdateComment() {
+  yield takeLatest(UPDATE_COMMENT_API, updateComment);
+}
+
+function* deleteComment(action) {
+  try {
+    let { status } = yield call(() => {
+      return taskService.deleteCommentService(action.idComment);
+    });
+    if (status === STATUS_CODE.SUCCESS) {
+      yield put({ type: GET_TASK_DETAIL_API, taskId: action.taskId });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export function* followActionDeleteComment() {
+  yield takeLatest(DELETE_COMMENT_API, deleteComment);
 }

@@ -10,6 +10,13 @@ export default class baseServices {
       data: model,
     });
   }
+  putOnLinkUrl(url) {
+    return Axios({
+      url: `${DOMAIN}/${url}`,
+      method: "PUT",
+      headers: { Authorization: "Bearer " + localStorage.getItem(TOKEN) },
+    });
+  }
   post(url, model) {
     return Axios({
       url: `${DOMAIN}/${url}`,
